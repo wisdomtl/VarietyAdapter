@@ -124,7 +124,11 @@ class VarietyAdapter(
         onViewRecycled?.invoke(holder)
     }
 
+    /**
+     * find the index of [AdapterProxy] according to the [data] in the [proxyList]
+     */
     private fun getProxyIndex(data: Any): Int = proxyList.indexOfFirst {
+        // if the first type parameter of AdapterProxy is the same as the data, it means the accordingly AdapterProxy found
         (it.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0].toString() == data.javaClass.toString()
     }
 
