@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import taylor.com.ui.*
-import taylor.com.varietyadapter.R
 import taylor.com.varietyadapter.VarietyAdapter
 
-class ImageAdapterProxy : VarietyAdapter.AdapterProxy<Image, ImageViewHolder>() {
+class ImageProxy : VarietyAdapter.Proxy<Image, ImageViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
             ImageView {

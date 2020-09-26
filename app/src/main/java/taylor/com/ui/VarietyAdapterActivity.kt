@@ -5,10 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import taylor.com.adapterproxy.Image
-import taylor.com.adapterproxy.ImageAdapterProxy
+import taylor.com.adapterproxy.ImageProxy
 import taylor.com.varietyadapter.VarietyAdapter
 import test.taylor.com.taylorcode.ui.recyclerview.variety.Text
-import test.taylor.com.taylorcode.ui.recyclerview.variety.TextAdapterProxy
+import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy
 
 class VarietyAdapterActivity : AppCompatActivity() {
 
@@ -37,8 +37,8 @@ class VarietyAdapterActivity : AppCompatActivity() {
         setContentView(rootView)
 
         val varietyAdapter = VarietyAdapter().apply {
-            addProxy(TextAdapterProxy())
-            addProxy(ImageAdapterProxy())
+            addProxy(TextProxy())
+            addProxy(ImageProxy())
         }
 
         datas = mutableListOf(

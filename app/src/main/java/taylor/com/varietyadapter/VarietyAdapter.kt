@@ -3,7 +3,7 @@ package taylor.com.varietyadapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import taylor.com.varietyadapter.VarietyAdapter.AdapterProxy
+import taylor.com.varietyadapter.VarietyAdapter.Proxy
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -38,9 +38,9 @@ import java.lang.reflect.ParameterizedType
  */
 class VarietyAdapter(
     /**
-     * the list of [AdapterProxy]
+     * the list of [Proxy]
      */
-    private var proxyList: MutableList<AdapterProxy<*, *>> = mutableListOf(),
+    private var proxyList: MutableList<Proxy<*, *>> = mutableListOf(),
     /**
      * the data of this adapter
      */
@@ -50,14 +50,14 @@ class VarietyAdapter(
     /**
      * add a new type of item for RecyclerView
      */
-    fun <T, VH : ViewHolder> addProxy(proxy: AdapterProxy<T, VH>) {
+    fun <T, VH : ViewHolder> addProxy(proxy: Proxy<T, VH>) {
         proxyList.add(proxy)
     }
 
     /**
      * remove a type of item for RecyclerView
      */
-    fun <T, VH : ViewHolder> removeProxy(proxy: AdapterProxy<T, VH>) {
+    fun <T, VH : ViewHolder> removeProxy(proxy: Proxy<T, VH>) {
         proxyList.remove(proxy)
     }
 
@@ -80,18 +80,12 @@ class VarietyAdapter(
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        (proxyList[getItemViewType(position)] as AdapterProxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[position], position, action)
+        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[position], position, action)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        (proxyList[getItemViewType(position)] as AdapterProxy<Any, ViewHolder>).onBindViewHolder(
-            holder,
-            dataList[position],
-            position,
-            action,
-            payloads
-        )
+        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder( holder, dataList[position], position, action, payloads )
     }
 
     override fun getItemCount(): Int = dataList.size
@@ -125,7 +119,7 @@ class VarietyAdapter(
     }
 
     /**
-     * find the index of [AdapterProxy] according to the [data] in the [proxyList]
+     * find the index of [Proxy] according to the [data] in the [proxyList]
      */
     private fun getProxyIndex(data: Any): Int = proxyList.indexOfFirst {
         // if the first type parameter of AdapterProxy is the same as the data, it means the accordingly AdapterProxy found
@@ -134,9 +128,9 @@ class VarietyAdapter(
 
     /**
      * the proxy of [RecyclerView.Adapter], which has the similar function to it.
-     * the business layer implements [AdapterProxy] to define how does the item look like
+     * the business layer implements [Proxy] to define how does the item look like
      */
-    abstract class AdapterProxy<T, VH : ViewHolder> {
+    abstract class Proxy<T, VH : ViewHolder> {
 
         abstract fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
 
