@@ -4,11 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import taylor.com.varietyadapter.VarietyAdapter
 import taylor.com.ui.*
 import taylor.com.varietyadapter.R
+import taylor.com.varietyadapter.VarietyAdapter
 
-class ImageAdapterProxy: VarietyAdapter.AdapterProxy<Image, ImageViewHolder>() {
+class ImageAdapterProxy : VarietyAdapter.AdapterProxy<Image, ImageViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
             ImageView {
@@ -16,7 +16,6 @@ class ImageAdapterProxy: VarietyAdapter.AdapterProxy<Image, ImageViewHolder>() {
                 layout_width = match_parent
                 layout_height = 50
                 scaleType = scale_fix_xy
-                background_res = R.drawable.ic_launcher_background
             }
         }
 
@@ -24,15 +23,12 @@ class ImageAdapterProxy: VarietyAdapter.AdapterProxy<Image, ImageViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, data: Image, index: Int, action: ((Any?) -> Unit)?) {
-
+        holder.ivAvatar?.background_color = data.color
     }
 }
 
+data class Image(var color: String)
 
-data class Image(
-    var url:String
-)
-
-class ImageViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val ivAvatar = itemView.find<ImageView>("ivAvatar")
 }
