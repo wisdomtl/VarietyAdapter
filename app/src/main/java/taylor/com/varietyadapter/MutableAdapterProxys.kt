@@ -19,6 +19,7 @@ class MutableAdapterProxys(
     }
 
     override fun indexOf(cls: Class<*>): Int {
-       return proxys.indexOfFirst { it.type == cls }
+//       return proxys.indexOfFirst { it.type == cls.kotlin }
+        return -1
     }
 }

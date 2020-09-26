@@ -3,6 +3,8 @@ package taylor.com.varietyadapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import taylor.com.varietyadapter.VarietyAdapter.AdapterProxy
+import java.lang.reflect.ParameterizedType
 
 /**
  * A special [RecyclerView.Adapter] which could show variety types of item without rewrite [onCreateViewHolder], [onBindViewHolder] and [getItemViewType].
@@ -38,7 +40,7 @@ class VarietyAdapter(
     /**
      * the list of [AdapterProxy]
      */
-    var adapterProxys: AdapterProxys = MutableAdapterProxys(),
+    var adapterProxys: MutableList<AdapterProxy<*, *>> = mutableListOf(),
     /**
      * the data of this adapter
      */
@@ -48,14 +50,14 @@ class VarietyAdapter(
     /**
      * add a new type of item for RecyclerView
      */
-    inline fun <reified T, VH : ViewHolder> addProxy(proxy: AdapterProxy<T, VH>) {
-        adapterProxys.add(proxy.apply { type = T::class.java })
+    fun <T, VH : ViewHolder> addProxy(proxy: AdapterProxy<T, VH>) {
+        adapterProxys.add(proxy)
     }
 
     /**
      * remove a type of item for RecyclerView
      */
-    inline fun <T, VH : ViewHolder> removeProxy(proxy: AdapterProxy<T, VH>) {
+    fun <T, VH : ViewHolder> removeProxy(proxy: AdapterProxy<T, VH>) {
         adapterProxys.remove(proxy)
     }
 
@@ -71,16 +73,25 @@ class VarietyAdapter(
     var onViewDetachedFromWindow: ((holder: ViewHolder) -> Unit)? = null
     var onViewRecycled: ((holder: ViewHolder) -> Unit)? = null
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return adapterProxys.get<Any, ViewHolder>(viewType).onCreateViewHolder(parent, viewType)
+        return adapterProxys[viewType].onCreateViewHolder(parent, viewType)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        adapterProxys.get<Any, ViewHolder>(getItemViewType(position)).onBindViewHolder(holder, datas[position], position, action)
+        (adapterProxys[getItemViewType(position)] as AdapterProxy<Any, ViewHolder>).onBindViewHolder(holder, datas[position], position, action)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        adapterProxys.get<Any, ViewHolder>(getItemViewType(position)).onBindViewHolder(holder, datas[position], position, action, payloads)
+        (adapterProxys[getItemViewType(position)] as AdapterProxy<Any, ViewHolder>).onBindViewHolder(
+            holder,
+            datas[position],
+            position,
+            action,
+            payloads
+        )
     }
 
     override fun getItemCount(): Int = datas.size
@@ -113,19 +124,22 @@ class VarietyAdapter(
         onViewRecycled?.invoke(holder)
     }
 
-    private fun getProxyIndex(data: Any): Int = adapterProxys.indexOf(data.javaClass)
+    private fun getProxyIndex(data: Any): Int = adapterProxys.indexOfFirst {
+        (it.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0].toString() == data.javaClass.toString()
+    }
 
+//    private fun getProxyIndex(data: Any): Int = adapterProxys.indexOfFirst { it.javaClass.typeParameters == data.javaClass }
     /**
      * the proxy of [RecyclerView.Adapter], which has the similar function to it.
      * the business layer implements [AdapterProxy] to define how does the item look like
      */
-    abstract class AdapterProxy<T, VH : RecyclerView.ViewHolder> {
+    abstract class AdapterProxy<T, VH : ViewHolder> {
         /**
          * the type of data in [RecyclerView.Adapter]
          */
-        var type: Class<T>? = null
+//        var type: Class<T>? = null
 
-        abstract fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
+        abstract fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
 
         abstract fun onBindViewHolder(holder: VH, data: T, index: Int, action: ((Any?) -> Unit)? = null)
 
@@ -141,11 +155,11 @@ class VarietyAdapter(
 
         fun size(): Int
 
-        fun <T, VH : RecyclerView.ViewHolder> get(index: Int): AdapterProxy<T, VH>
+        fun <T, VH : ViewHolder> get(index: Int): AdapterProxy<T, VH>
 
-        fun <T, VH : RecyclerView.ViewHolder> add(proxy: AdapterProxy<T, VH>)
+        fun <T, VH : ViewHolder> add(proxy: AdapterProxy<T, VH>)
 
-        fun <T, VH : RecyclerView.ViewHolder> remove(proxy: AdapterProxy<T, VH>)
+        fun <T, VH : ViewHolder> remove(proxy: AdapterProxy<T, VH>)
 
         fun indexOf(cls: Class<*>): Int
     }
