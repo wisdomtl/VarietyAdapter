@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import taylor.com.ui.*
 import taylor.com.varietyadapter.VarietyAdapter
 
-class TextProxy : VarietyAdapter.Proxy<Text, TextViewHolder>() {
+class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
             TextView {
@@ -33,8 +33,17 @@ class TextProxy : VarietyAdapter.Proxy<Text, TextViewHolder>() {
 }
 
 data class Text(
-    var text: String
-)
+    var text: String,
+    var type: Int
+) : VarietyAdapter.DataProxyMap {
+    override fun toProxy(): String {
+        return when (type) {
+            1 -> TextProxy1::class.java.toString()
+            2 -> TextProxy2::class.java.toString()
+            else -> TextProxy2::class.java.toString()
+        }
+    }
+}
 
 class TextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val tvName = itemView.find<TextView>("tvName")

@@ -8,7 +8,8 @@ import taylor.com.adapterproxy.Image
 import taylor.com.adapterproxy.ImageProxy
 import taylor.com.varietyadapter.VarietyAdapter
 import test.taylor.com.taylorcode.ui.recyclerview.variety.Text
-import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy
+import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy1
+import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy2
 
 class VarietyAdapterActivity : AppCompatActivity() {
 
@@ -37,24 +38,25 @@ class VarietyAdapterActivity : AppCompatActivity() {
         setContentView(rootView)
 
         val varietyAdapter = VarietyAdapter().apply {
-            addProxy(TextProxy())
+            addProxy(TextProxy1())
+            addProxy(TextProxy2())
             addProxy(ImageProxy())
         }
 
         datas = mutableListOf(
-            Text("item 1"),
+            Text("item 1",1),
             Image("#00ff00"),
-            Text("item 2"),
-            Text("item 3"),
+            Text("item 2",2),
+            Text("item 3",1),
             Image("#88ff00"),
-            Text("item 4"),
-            Text("item 5"),
-            Text("item 6"),
+            Text("item 4",1),
+            Text("item 5",2),
+            Text("item 6",2),
             Image("#ffff00"),
-            Text("item 7"),
-            Text("item 8"),
+            Text("item 7",1),
+            Text("item 8",2),
             Image("#098f00"),
-            Text("item 9")
+            Text("item 9",1)
         )
         varietyAdapter.dataList = datas
 

@@ -85,7 +85,7 @@ class VarietyAdapter(
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder( holder, dataList[position], position, action, payloads )
+        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[position], position, action, payloads)
     }
 
     override fun getItemCount(): Int = dataList.size
@@ -122,8 +122,10 @@ class VarietyAdapter(
      * find the index of [Proxy] according to the [data] in the [proxyList]
      */
     private fun getProxyIndex(data: Any): Int = proxyList.indexOfFirst {
-        // if the first type parameter of AdapterProxy is the same as the data, it means the accordingly AdapterProxy found
-        (it.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0].toString() == data.javaClass.toString()
+        val firstTypeParamClassName = (it.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0].toString()
+        val proxyClassName = it.javaClass.toString()
+        firstTypeParamClassName == data.javaClass.toString() // primary condition:if the first type parameter of AdapterProxy is the same as the data, it means the accordingly AdapterProxy found
+                && (data as? DataProxyMap)?.toProxy() ?: proxyClassName == proxyClassName // secondary condition: match data to proxy mapping relation defined by the data
     }
 
     /**
@@ -139,5 +141,15 @@ class VarietyAdapter(
         open fun onBindViewHolder(holder: VH, data: T, index: Int, action: ((Any?) -> Unit)? = null, payloads: MutableList<Any>) {
             onBindViewHolder(holder, data, index, action)
         }
+    }
+
+    /**
+     * If one type of data maps multiple proxy, data class should implements this interface to define the mapping relation
+     */
+    interface DataProxyMap {
+        /**
+         * @return the class name of proxy mapped
+         */
+        fun toProxy(): String
     }
 }
