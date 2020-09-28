@@ -32,8 +32,8 @@ val varietyAdapter = VarietyAdapter().apply {
 rv?.adapter = varietyAdapter
 rv?.layoutManager = LinearLayoutManager(this)
 ```
-TextProxy1
-```
+Proxy is the place to define how item looks like
+```kotlin
 class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
