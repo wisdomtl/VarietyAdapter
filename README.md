@@ -6,9 +6,9 @@ Combine different view type into one RecyclerView.Adapter easily
 // build Adapter
 val varietyAdapter = VarietyAdapter().apply {
     // add Proxy
-    addProxy(TextProxy1())
-    addProxy(TextProxy2())
-    addProxy(ImageProxy())
+    addProxy(TextProxy1()) // firsr item type
+    addProxy(TextProxy2()) // second item type
+    addProxy(ImageProxy()) // third item type
     // set data list
     dataList =mutableListOf(
         Text("item 1",1),
@@ -36,6 +36,7 @@ Proxy is the place to define how item looks like
 ```kotlin
 class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        // building item view
         val itemView = parent.context.run {
             TextView {
                 layout_id = "tvName"
@@ -49,6 +50,7 @@ class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
         return TextViewHolder(itemView)
     }
 
+    // binding data to item view
     override fun onBindViewHolder(holder: TextViewHolder, data: Text, index: Int, action: ((Any?) -> Unit)?) {
         holder.tvName?.apply {
             text = data.text
