@@ -1,8 +1,12 @@
 package taylor.com.varietyadapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AdapterListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import taylor.com.varietyadapter.VarietyAdapter.Proxy
 import java.lang.reflect.ParameterizedType
 
@@ -42,10 +46,21 @@ class VarietyAdapter(
      */
     private var proxyList: MutableList<Proxy<*, *>> = mutableListOf(),
     /**
+     * the dispatcher used by [dataDiffer]
+     */
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : RecyclerView.Adapter<ViewHolder>() {
+
+    private val dataDiffer = AsyncListDiffer(AdapterListUpdateCallback(this), dispatcher)
+
+    /**
      * the data of this adapter
      */
-    var dataList: MutableList<Any> = mutableListOf()
-) : RecyclerView.Adapter<ViewHolder>() {
+    var dataList: List<Any>
+        set(value) {
+            dataDiffer.submitList(value)
+        }
+        get() = dataDiffer.oldList
 
     /**
      * add a new type of item for RecyclerView
@@ -73,7 +88,6 @@ class VarietyAdapter(
     var onViewDetachedFromWindow: ((holder: ViewHolder) -> Unit)? = null
     var onViewRecycled: ((holder: ViewHolder) -> Unit)? = null
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return proxyList[viewType].onCreateViewHolder(parent, viewType)
     }
@@ -99,6 +113,7 @@ class VarietyAdapter(
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        dataDiffer.cancel()
         onDetachedFromRecyclerView?.invoke(recyclerView)
     }
 

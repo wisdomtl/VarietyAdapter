@@ -15,7 +15,7 @@ class VarietyAdapterActivity : AppCompatActivity() {
 
     private var rv: RecyclerView? = null
 
-    private var lastTextIndex: Int = -1
+    private var itemNumber: Int = 1
 
     private lateinit var datas: MutableList<Any>
 
@@ -41,27 +41,55 @@ class VarietyAdapterActivity : AppCompatActivity() {
             addProxy(TextProxy1())
             addProxy(TextProxy2())
             addProxy(ImageProxy())
+            dataList = listOf(
+                Text("item ${itemNumber++}",1),
+                Image("#00ff00"),
+                Text("item ${itemNumber++}",2),
+                Text("item ${itemNumber++}",1),
+                Image("#88ff00"),
+                Text("item ${itemNumber++}",1),
+                Text("item ${itemNumber++}",2),
+                Text("item ${itemNumber++}",2),
+                Image("#ffff00"),
+                Text("item ${itemNumber++}",1),
+                Text("item ${itemNumber++}",2),
+                Image("#098f00"),
+                Text("item ${itemNumber++}",1)
+            )
         }
-
-        datas = mutableListOf(
-            Text("item 1",1),
-            Image("#00ff00"),
-            Text("item 2",2),
-            Text("item 3",1),
-            Image("#88ff00"),
-            Text("item 4",1),
-            Text("item 5",2),
-            Text("item 6",2),
-            Image("#ffff00"),
-            Text("item 7",1),
-            Text("item 8",2),
-            Image("#098f00"),
-            Text("item 9",1)
-        )
-        varietyAdapter.dataList = datas
 
         rv?.adapter = varietyAdapter
         rv?.layoutManager = LinearLayoutManager(this)
-        varietyAdapter.notifyDataSetChanged()
+        rv?.addTopBottomListener {direction->
+           if (direction == -1){ // reach top
+           } else {// reach bottom
+               // append new data to the tail of existing data
+               val  oldList = varietyAdapter.dataList
+               varietyAdapter.dataList = oldList.toMutableList().apply {
+                   addAll(listOf(
+                       Text("item ${itemNumber++}",2),
+                       Text("item ${itemNumber++}",2),
+                       Text("item ${itemNumber++}",2),
+                       Text("item ${itemNumber++}",2),
+                       Text("item ${itemNumber++}",2),
+                   ))
+               }
+           }
+        }
     }
+}
+
+fun RecyclerView.addTopBottomListener(onBorder: (direction:Int)->Unit){
+    addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (dy !=0) {
+                if (!canScrollVertically(-1)){
+                        onBorder(-1)
+                } else if (!canScrollVertically(1)){
+                    onBorder(1)
+                }
+            }
+        }
+    })
 }

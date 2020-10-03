@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import taylor.com.ui.*
+import taylor.com.varietyadapter.Diff
 import taylor.com.varietyadapter.VarietyAdapter
 
 class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
@@ -35,13 +36,30 @@ class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
 data class Text(
     var text: String,
     var type: Int
-) : VarietyAdapter.DataProxyMap {
+) : VarietyAdapter.DataProxyMap, Diff {
     override fun toProxy(): String {
         return when (type) {
             1 -> TextProxy1::class.java.toString()
             2 -> TextProxy2::class.java.toString()
             else -> TextProxy2::class.java.toString()
         }
+    }
+
+    override fun hashCode(): Int = text.hashCode()
+    override fun diff(other: Any?): Any? {
+        return when {
+            other !is Text -> null
+            this.text != other.text -> {
+                "text diff"
+            }
+            else -> {
+                null
+            }
+        }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return (other as? Text)?.text == this.text
     }
 }
 
