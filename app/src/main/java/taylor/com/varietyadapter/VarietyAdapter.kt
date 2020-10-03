@@ -33,12 +33,11 @@ import java.lang.reflect.ParameterizedType
  * }
  *
  * // bind data to adapter
- * varietyAdapter.datas = data
+ * varietyAdapter.dataList = data
  *
  * // bind adapter to RecyclerView
  * recyclerView.adapter = varietyAdapter
  * recyclerView.layoutManager = LinearLayoutManager(context)
- * varietyAdapter.notifyDataSetChanged()
  */
 class VarietyAdapter(
     /**
