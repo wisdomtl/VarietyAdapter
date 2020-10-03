@@ -14,7 +14,7 @@ class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
                 layout_id = "tvName"
                 layout_width = match_parent
                 layout_height = wrap_content
-                textSize = 40f
+                textSize = 60f
                 gravity = gravity_center
                 textColor = "#ff00ff"
             }

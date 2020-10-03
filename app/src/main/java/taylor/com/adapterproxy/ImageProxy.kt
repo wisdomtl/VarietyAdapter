@@ -13,7 +13,7 @@ class ImageProxy : VarietyAdapter.Proxy<Image, ImageViewHolder>() {
             ImageView {
                 layout_id = "ivAvatar"
                 layout_width = match_parent
-                layout_height = 50
+                layout_height = 90
                 scaleType = scale_fix_xy
             }
         }
