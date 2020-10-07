@@ -62,6 +62,17 @@ class VarietyAdapter(
         get() = dataDiffer.oldList
 
     /**
+     * preload threshold. [onPreload] will be called if there is [preloadItemCount] items remain in the list
+     */
+    var preloadItemCount = 0
+
+    /**
+     * an lambda will be invoked in [onBindViewHolder] when preload threshold is satisfied
+     * implement this lambda with actual data loading action
+     */
+    var onPreload: (() -> Unit)? = null
+
+    /**
      * add a new type of item for RecyclerView
      */
     fun <T, VH : ViewHolder> addProxy(proxy: Proxy<T, VH>) {
@@ -94,11 +105,13 @@ class VarietyAdapter(
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[position], position, action)
+        checkPreload(position)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[position], position, action, payloads)
+        checkPreload(position)
     }
 
     override fun getItemCount(): Int = dataList.size
@@ -130,6 +143,15 @@ class VarietyAdapter(
 
     override fun onViewRecycled(holder: ViewHolder) {
         onViewRecycled?.invoke(holder)
+    }
+
+    /**
+     * check if preload threshold is satisfied
+     */
+    private fun checkPreload(position: Int) {
+        if (onPreload != null && position >= itemCount - 1 - preloadItemCount) {
+            onPreload?.invoke()
+        }
     }
 
     /**
