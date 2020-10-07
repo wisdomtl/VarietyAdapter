@@ -76,23 +76,6 @@ class VarietyAdapterActivity : AppCompatActivity() {
 
         rv?.adapter = varietyAdapter
         rv?.layoutManager = LinearLayoutManager(this)
-
-//        rv?.addTopBottomListener {direction->
-//           if (direction == -1){ // reach top
-//           } else {// reach bottom
-//               // append new data to the tail of existing data
-//               val  oldList = varietyAdapter.dataList
-//               varietyAdapter.dataList = oldList.toMutableList().apply {
-//                   addAll(listOf(
-//                       Text("item ${itemNumber++}",2),
-//                       Text("item ${itemNumber++}",2),
-//                       Text("item ${itemNumber++}",2),
-//                       Text("item ${itemNumber++}",2),
-//                       Text("item ${itemNumber++}",2),
-//                   ))
-//               }
-//           }
-//        }
     }
 }
 
