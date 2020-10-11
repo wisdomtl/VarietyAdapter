@@ -35,7 +35,7 @@ class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
 
 data class Text(
     var text: String,
-    var type: Int
+    var type: Int = 2
 ) : VarietyAdapter.DataProxyMap, Diff {
     override fun toProxy(): String {
         return when (type) {

@@ -3,12 +3,14 @@ package taylor.com.varietyadapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AdapterListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import taylor.com.varietyadapter.VarietyAdapter.Proxy
 import java.lang.reflect.ParameterizedType
+import kotlin.math.max
 
 /**
  * A special [RecyclerView.Adapter] which could show variety types of item without rewrite [onCreateViewHolder], [onBindViewHolder] and [getItemViewType].
@@ -73,6 +75,11 @@ class VarietyAdapter(
     var onPreload: (() -> Unit)? = null
 
     /**
+     * scroll state of [RecyclerView] which this adapter attached to
+     */
+    private var scrollState = SCROLL_STATE_IDLE
+
+    /**
      * add a new type of item for RecyclerView
      */
     fun <T, VH : ViewHolder> addProxy(proxy: Proxy<T, VH>) {
@@ -121,6 +128,15 @@ class VarietyAdapter(
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        /**
+         * keep scroll state in [scrollState] which is used in preloading
+         */
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                scrollState = newState
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
         onAttachedToRecyclerView?.invoke(recyclerView)
     }
 
@@ -149,7 +165,10 @@ class VarietyAdapter(
      * check if preload threshold is satisfied
      */
     private fun checkPreload(position: Int) {
-        if (onPreload != null && position >= itemCount - 1 - preloadItemCount) {
+        if (onPreload != null
+            && position >= max(itemCount - 1 - preloadItemCount, 0)// reach the preload threshold position
+            && scrollState != SCROLL_STATE_IDLE // the list is scrolling
+        ) {
             onPreload?.invoke()
         }
     }
