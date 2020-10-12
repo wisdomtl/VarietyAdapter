@@ -9,7 +9,7 @@ val varietyAdapter = VarietyAdapter().apply {
     addProxy(TextProxy1()) // firsr item type
     addProxy(TextProxy2()) // second item type
     addProxy(ImageProxy()) // third item type
-    // set data list
+    // set data list， no need to notify data set change, it is done by DiffUtil which is inside VarietyAdapter
     dataList =mutableListOf(
         Text("item 1",1),
         Image("#00ff00"),
@@ -25,7 +25,6 @@ val varietyAdapter = VarietyAdapter().apply {
         Image("#098f00"),
         Text("item 9",1)
     ) 
-    notifyDataSetChanged()
 }
 
 // bind to RecyclerView
@@ -36,7 +35,7 @@ Proxy is the place to define how item looks like
 ```kotlin
 class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        // building item view
+        // building item view by layout dsl
         val itemView = parent.context.run {
             TextView {
                 layout_id = "tvName"
@@ -52,27 +51,14 @@ class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
 
     // binding data to item view
     override fun onBindViewHolder(holder: TextViewHolder, data: Text, index: Int, action: ((Any?) -> Unit)?) {
-        holder.tvName?.apply {
-            text = data.text
-            onClick = {
-                action?.invoke(index)
-            }
-        }
+        holder.tvName?.apply { text = data.text }
     }
 }
 
 data class Text(
     var text: String,
     var type: Int
-) : VarietyAdapter.DataProxyMap {
-    override fun toProxy(): String {
-        return when (type) {
-            1 -> TextProxy1::class.java.toString()
-            2 -> TextProxy2::class.java.toString()
-            else -> TextProxy2::class.java.toString()
-        }
-    }
-}
+)
 
 class TextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val tvName = itemView.find<TextView>("tvName")
