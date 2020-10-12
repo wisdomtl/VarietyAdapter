@@ -7,8 +7,7 @@ Combine different view type into one RecyclerView.Adapter easily
 val varietyAdapter = VarietyAdapter().apply {
     // add Proxy
     addProxy(TextProxy1()) // firsr item type
-    addProxy(TextProxy2()) // second item type
-    addProxy(ImageProxy()) // third item type
+    addProxy(ImageProxy()) // second item type
     // set data list， no need to notify data set change, it is done by DiffUtil which is inside VarietyAdapter
     dataList =mutableListOf(
         Text("item 1",1),
