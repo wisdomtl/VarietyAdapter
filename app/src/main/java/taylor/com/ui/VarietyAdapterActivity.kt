@@ -47,7 +47,7 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
             // append new data to the tail of existing data
             val oldList = dataList
             // as if data comes from server
-            Log.v("ttaylor","tag=asdf, VarietyAdapterActivity.()  onPreLoad")
+            Log.v("ttaylor", "tag=asdf, VarietyAdapterActivity.()  onPreLoad")
             launch(Dispatchers.IO) {
                 val newDataList = oldList.toMutableList().apply {
                     val footer = removeAt(size - 1)
@@ -64,7 +64,7 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
                 }
                 delay(3000)
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     dataList = newDataList
                 }
             }
@@ -94,6 +94,23 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                             EmptyBean("No items in the list!")
                         )
                     }
+                }
+            }
+
+            Button {
+                layout_id = "btnRemove"
+                layout_width = wrap_content
+                layout_height = wrap_content
+                textSize = 16f
+                padding = 5
+                textColor = "#3F4658"
+                gravity = gravity_center
+                text = "remove"
+                start_toEndOf = "tvEmpty"
+                align_vertical_to = "tvEmpty"
+                onClick = {
+                    val newList = varietyAdapter.dataList.toMutableList().apply { removeAt(1) }
+                    varietyAdapter.dataList = newList
                 }
             }
 
