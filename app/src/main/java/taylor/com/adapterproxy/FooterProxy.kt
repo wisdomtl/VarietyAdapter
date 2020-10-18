@@ -1,8 +1,10 @@
 package taylor.com.adapterproxy
 
+import android.animation.ValueAnimator
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -28,10 +30,16 @@ class FooterProxy : VarietyAdapter.Proxy<Footer, FooterViewHolder>() {
                     end_toStartOf = "tvLoading"
                     horizontal_chain_style = packed
                     src = R.drawable.ic_loading
+                }.also {
                     animSet {
                         objectAnim {
+                            target = it
+                            interpolator = LinearInterpolator()
+                            rotation = floatArrayOf(0f,360f)
+                            repeatCount = ValueAnimator.INFINITE
+                            duration = 700
                         }
-                    }
+                    }.start()
                 }
 
                 TextView {
