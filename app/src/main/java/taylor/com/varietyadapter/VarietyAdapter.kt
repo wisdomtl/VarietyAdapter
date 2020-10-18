@@ -166,7 +166,7 @@ class VarietyAdapter(
      */
     private fun checkPreload(position: Int) {
         if (onPreload != null
-            && position >= max(itemCount - 1 - preloadItemCount, 0)// reach the preload threshold position
+            && position == max(itemCount - 1 - preloadItemCount, 0)// reach the preload threshold position
             && scrollState != SCROLL_STATE_IDLE // the list is scrolling
         ) {
             onPreload?.invoke()

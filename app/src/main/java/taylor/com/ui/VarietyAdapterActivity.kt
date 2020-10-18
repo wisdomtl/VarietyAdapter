@@ -1,16 +1,18 @@
 package taylor.com.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.*
 import taylor.com.adapterproxy.*
 import taylor.com.varietyadapter.VarietyAdapter
 import test.taylor.com.taylorcode.ui.recyclerview.variety.Text
 import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy1
 import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy2
 
-class VarietyAdapterActivity : AppCompatActivity() {
+class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private var itemNumber: Int = 1
 
     private var rv: RecyclerView? = null
@@ -20,6 +22,8 @@ class VarietyAdapterActivity : AppCompatActivity() {
         addProxy(TextProxy2())
         addProxy(ImageProxy())
         addProxy(EmptyProxy())
+        addProxy(FooterProxy())
+
         // add default content for RecyclerView
         dataList = listOf(
             Text("item ${itemNumber++}", 1),
@@ -34,23 +38,35 @@ class VarietyAdapterActivity : AppCompatActivity() {
             Text("item ${itemNumber++}", 1),
             Text("item ${itemNumber++}", 2),
             Image("#098f00"),
-            Text("item ${itemNumber++}", 1)
+            Text("item ${itemNumber++}", 1),
+            Footer("loading")
         )
         preloadItemCount = 2
         // define preload action
         onPreload = {
             // append new data to the tail of existing data
             val oldList = dataList
-            dataList = oldList.toMutableList().apply {
-                addAll(
-                    listOf(
-                        Text("item ${itemNumber++}"),
-                        Text("item ${itemNumber++}"),
-                        Text("item ${itemNumber++}"),
-                        Text("item ${itemNumber++}"),
-                        Text("item ${itemNumber++}"),
+            // as if data comes from server
+            Log.v("ttaylor","tag=asdf, VarietyAdapterActivity.()  onPreLoad")
+            launch(Dispatchers.IO) {
+                val newDataList = oldList.toMutableList().apply {
+                    val footer = removeAt(size - 1)
+                    addAll(
+                        listOf(
+                            Text("item ${itemNumber++}"),
+                            Text("item ${itemNumber++}"),
+                            Text("item ${itemNumber++}"),
+                            Text("item ${itemNumber++}"),
+                            Text("item ${itemNumber++}"),
+                            footer
+                        )
                     )
-                )
+
+                }
+                delay(3000)
+                withContext(Dispatchers.Main){
+                    dataList = newDataList
+                }
             }
         }
     }
@@ -66,7 +82,7 @@ class VarietyAdapterActivity : AppCompatActivity() {
                 layout_height = wrap_content
                 textSize = 16f
                 padding = 5
-                textColor ="#3F4658"
+                textColor = "#3F4658"
                 gravity = gravity_center
                 text = "empty list"
                 top_toTopOf = parent_id
@@ -83,8 +99,9 @@ class VarietyAdapterActivity : AppCompatActivity() {
 
             rv = RecyclerView {
                 layout_width = match_parent
-                layout_height = wrap_content
+                layout_height = 0
                 top_toBottomOf = "tvEmpty"
+                bottom_toBottomOf = parent_id
                 center_horizontal = true
                 adapter = varietyAdapter
                 layoutManager = LinearLayoutManager(this@VarietyAdapterActivity)
