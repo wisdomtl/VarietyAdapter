@@ -50,17 +50,17 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
             Log.v("ttaylor", "tag=asdf, VarietyAdapterActivity.()  onPreLoad")
             launch(Dispatchers.IO) {
                 val newDataList = oldList.toMutableList().apply {
-                    val footer = removeAt(size - 1)
-                    addAll(
-                        listOf(
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
-                            footer
-                        )
-                    )
+//                    val footer = removeAt(size - 1)
+//                    addAll(
+//                        listOf(
+//                            Text("item ${itemNumber++}"),
+//                            Text("item ${itemNumber++}"),
+//                            Text("item ${itemNumber++}"),
+//                            Text("item ${itemNumber++}"),
+//                            Text("item ${itemNumber++}"),
+//                            footer
+//                        )
+//                    )
 
                 }
                 delay(3000)

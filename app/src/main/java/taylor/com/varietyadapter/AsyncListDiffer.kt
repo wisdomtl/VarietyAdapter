@@ -1,6 +1,5 @@
 package taylor.com.varietyadapter
 
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import kotlinx.coroutines.*
@@ -23,6 +22,7 @@ class AsyncListDiffer(
      * the result list after last diffing
      */
     var oldList = listOf<Any>()
+        get() = oldList.toList()
 
     /**
      * the new list
@@ -41,12 +41,9 @@ class AsyncListDiffer(
     fun submitList(newList: List<Any>) {
         val submitGeneration = ++maxSubmitGeneration
         this.newList = newList
-        //fast return: new list is the as the old one, nothing update
-        if (this.oldList == newList) return
 
         // fast return: old list is empty, just add all new list
         if (this.oldList.isEmpty()) {
-            this.oldList = newList
             oldList = newList.toList()
             listUpdateCallback.onInserted(0, newList.size)
             return
