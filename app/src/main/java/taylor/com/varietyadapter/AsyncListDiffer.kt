@@ -22,7 +22,6 @@ class AsyncListDiffer(
      * the result list after last diffing
      */
     var oldList = listOf<Any>()
-        get() = oldList.toList()
 
     /**
      * the new list
