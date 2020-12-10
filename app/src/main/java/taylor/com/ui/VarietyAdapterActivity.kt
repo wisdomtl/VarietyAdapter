@@ -11,6 +11,7 @@ import taylor.com.varietyadapter.VarietyAdapter
 import test.taylor.com.taylorcode.ui.recyclerview.variety.Text
 import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy1
 import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy2
+import test.taylor.com.taylorcode.ui.recyclerview.variety.TextViewHolder
 
 class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private var itemNumber: Int = 1
@@ -68,6 +69,16 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                     dataList = newDataList
                 }
             }
+        }
+
+        onViewDetachedFromWindow = {
+            val viewHolder = (it as? TextViewHolder)
+            Log.v("ttaylor","tag=, onViewDetachedFromWindow.()  text=${viewHolder?.tvName?.text}")
+        }
+
+        onViewAttachedToWindow = {
+            val viewHolder = (it as? TextViewHolder)
+            Log.v("ttaylor","tag=, onViewAttachedToWindow.()  text=${viewHolder?.tvName?.text}")
         }
     }
 
