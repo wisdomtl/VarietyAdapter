@@ -17,16 +17,11 @@ class AsyncListDiffer(
      * common usage is to turn existing [Executor] into [CoroutineDispatcher] by [asCoroutineDispatcher]
      */
     dispatcher: CoroutineDispatcher
-) : DiffUtil.Callback(), CoroutineScope by CoroutineScope(SupervisorJob() + dispatcher) {
+) : CoroutineScope by CoroutineScope(SupervisorJob() + dispatcher) {
     /**
      * the result list after last diffing
      */
     var oldList = listOf<Any>()
-
-    /**
-     * the new list
-     */
-    var newList = listOf<Any>()
 
     /**
      * an Int to auto-increase by the times of [submitList] invocation
@@ -39,7 +34,6 @@ class AsyncListDiffer(
      */
     fun submitList(newList: List<Any>) {
         val submitGeneration = ++maxSubmitGeneration
-        this.newList = newList
 
         // fast return: old list is empty, just add all new list
         if (this.oldList.isEmpty()) {
@@ -50,42 +44,44 @@ class AsyncListDiffer(
 
         // begin diffing in a new coroutine
         launch {
-            val diffResult = DiffUtil.calculateDiff(this@AsyncListDiffer)
-            oldList = newList.toList()
+            val diffResult = DiffUtil.calculateDiff(DiffCallback(oldList, newList))
             // dispatch the diff result to main thread
             withContext(Dispatchers.Main) {
                 // just apply the last diffResult, discard the others
                 if (submitGeneration == maxSubmitGeneration) {
+                    oldList = newList.toList()
                     diffResult.dispatchUpdatesTo(listUpdateCallback)
                 }
             }
         }
     }
 
-    override fun getOldListSize(): Int = oldList.size
+    inner class DiffCallback(var oldList: List<Any>, var newList: List<Any>) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
 
-    override fun getNewListSize(): Int = newList.size
+        override fun getNewListSize(): Int = newList.size
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
-        // using existing hashCode() to make sure whether new and old items are one object
-        return oldItem.hashCode() == newItem.hashCode()
-    }
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            // using existing hashCode() to make sure whether new and old items are one object
+            return oldItem.hashCode() == newItem.hashCode()
+        }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
-        // using existing hashCode() to make sure whether new and old items have the same content
-        return oldItem == newItem
-    }
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            // using existing hashCode() to make sure whether new and old items have the same content
+            return oldItem == newItem
+        }
 
-    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        val oldItem = oldList[oldItemPosition] as? Diff
-        val newItem = newList[newItemPosition] as? Diff
-        if (oldItem == null || newItem == null) return null
-        // if new and old items are the same object but have different content, call diff() to find the precise difference
-        return oldItem diff newItem
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            val oldItem = oldList[oldItemPosition] as? Diff
+            val newItem = newList[newItemPosition] as? Diff
+            if (oldItem == null || newItem == null) return null
+            // if new and old items are the same object but have different content, call diff() to find the precise difference
+            return oldItem diff newItem
+        }
     }
 }
 
