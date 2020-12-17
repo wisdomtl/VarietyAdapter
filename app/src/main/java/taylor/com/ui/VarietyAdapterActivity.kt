@@ -2,6 +2,7 @@ package taylor.com.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -109,8 +110,67 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                 start_toEndOf = "tvEmpty"
                 align_vertical_to = "tvEmpty"
                 onClick = {
-                    val newList = varietyAdapter.dataList.toMutableList().apply { removeAt(1) }
-                    varietyAdapter.dataList = newList
+                    val newList = when {
+                        //do remove
+                        varietyAdapter.dataList.size >= 2 -> {
+                            varietyAdapter.dataList.toMutableList().apply { removeAt(0) }
+                        }
+
+                        varietyAdapter.dataList.size == 1 -> {
+                            if (varietyAdapter.dataList[0] is EmptyBean) {
+                                Toast.makeText(context, "no data", Toast.LENGTH_SHORT).show()
+                                null
+                            } else {
+                                //replace empty item
+                                varietyAdapter.dataList.toMutableList().apply {
+                                    removeAt(0)
+                                    add(EmptyBean("No items in the list!"))
+                                }
+                            }
+                        }
+                        else -> {
+                            varietyAdapter.dataList
+                        }
+                    }
+                    //update list
+                    newList?.let {
+                        varietyAdapter.dataList = it
+                    }
+
+                }
+            }
+            Button {
+                layout_id = "btnAdd"
+                layout_width = wrap_content
+                layout_height = wrap_content
+                textSize = 16f
+                padding = 5
+                textColor = "#3F4658"
+                gravity = gravity_center
+                text = "add item"
+                start_toEndOf = "btnRemove"
+                align_vertical_to = "btnRemove"
+                onClick = {
+                    val newList = when {
+                        //if empty item is show
+                        (varietyAdapter.dataList.size == 1 && varietyAdapter.dataList[0] is EmptyBean) -> {
+                            //replace empty item
+                            varietyAdapter.dataList.toMutableList().apply {
+                                removeAt(0)
+                                add(0, Text("item ${itemNumber++}"))
+                            }
+                        }
+                        else -> {
+                            //add item
+                            varietyAdapter.dataList.toMutableList().apply {
+                                add(0, Text("item ${itemNumber++}"))
+                            }
+                        }
+                    }
+                    //update list
+                    newList.let {
+                        varietyAdapter.dataList = it
+                    }
                 }
             }
 
