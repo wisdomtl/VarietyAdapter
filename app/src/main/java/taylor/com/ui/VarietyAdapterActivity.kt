@@ -27,19 +27,19 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
         // add default content for RecyclerView
         dataList = listOf(
-            Text("item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 1),
             Image("#00ff00"),
-            Text("item ${itemNumber++}", 2),
-            Text("item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 1),
             Image("#88ff00"),
-            Text("item ${itemNumber++}", 1),
-            Text("item ${itemNumber++}", 2),
-            Text("item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
             Image("#ffff00"),
-            Text("item ${itemNumber++}", 1),
-            Text("item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 2),
             Image("#098f00"),
-            Text("item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 1),
             Footer("loading")
         )
         preloadItemCount = 2
@@ -54,11 +54,11 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                     val footer = removeAt(size - 1)
                     addAll(
                         listOf(
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
-                            Text("item ${itemNumber++}"),
+                            Text(itemCount, "item ${itemNumber++}"),
+                            Text(itemCount, "item ${itemNumber++}"),
+                            Text(itemCount, "item ${itemNumber++}"),
+                            Text(itemCount, "item ${itemNumber++}"),
+                            Text(itemCount, "item ${itemNumber++}"),
                             footer
                         )
                     )
@@ -73,12 +73,12 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
         onViewDetachedFromWindow = {
             val viewHolder = (it as? TextViewHolder)
-            Log.v("ttaylor","tag=, onViewDetachedFromWindow.()  text=${viewHolder?.tvName?.text}")
+            Log.v("ttaylor", "tag=, onViewDetachedFromWindow.()  text=${viewHolder?.tvName?.text}")
         }
 
         onViewAttachedToWindow = {
             val viewHolder = (it as? TextViewHolder)
-            Log.v("ttaylor","tag=, onViewAttachedToWindow.()  text=${viewHolder?.tvName?.text}")
+            Log.v("ttaylor", "tag=, onViewAttachedToWindow.()  text=${viewHolder?.tvName?.text}")
         }
     }
 
@@ -122,6 +122,29 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                 onClick = {
                     val newList = varietyAdapter.dataList.toMutableList().apply { removeAt(1) }
                     varietyAdapter.dataList = newList
+                }
+            }
+
+            Button {
+                layout_id = "btnPartUpdate"
+                layout_width = wrap_content
+                layout_height = wrap_content
+                textSize = 16f
+                padding = 5
+                gravity = gravity_center
+                text = "partially update"
+                start_toEndOf = "btnRemove"
+                align_vertical_to = "btnRemove"
+                onClick = {
+                    val oldData = varietyAdapter.dataList.toMutableList()
+                    val first = oldData.firstOrNull() as? Text
+                    if (first != null) {
+                        val newFirst = first.copy().apply {
+                            text = "100"
+                        }
+                        oldData.set(0, newFirst)
+                        varietyAdapter.dataList = oldData
+                    }
                 }
             }
 
