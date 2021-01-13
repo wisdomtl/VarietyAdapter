@@ -14,7 +14,7 @@ class AsyncListDiffer(
     var listUpdateCallback: ListUpdateCallback,
     /**
      * a [CoroutineDispatcher] defined by yourself
-     * common usage is to turn existing [Executor] into [CoroutineDispatcher] by [asCoroutineDispatcher]
+     * common usage is to turn existing [Executor][java.util.concurrent.Executor] into [CoroutineDispatcher] by [asCoroutineDispatcher]
      */
     dispatcher: CoroutineDispatcher
 ) : CoroutineScope by CoroutineScope(SupervisorJob() + dispatcher) {
