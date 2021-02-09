@@ -14,7 +14,7 @@ class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
         val itemView = parent.context.run {
             ConstraintLayout {
                 layout_width = match_parent
-                layout_height = 40
+                layout_height = 60
 
                 TextView {
                     layout_id = "tvName"

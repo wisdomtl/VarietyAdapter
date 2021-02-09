@@ -26,12 +26,12 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
         // add default content for RecyclerView
         dataList = listOf(
-            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 1),
 //            Image("#00ff00"),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 1),
+            Text(itemNumber, "item ${itemNumber++}", 1),
             Text(itemNumber, "item ${itemNumber++}", 2),
             Text(itemNumber, "item ${itemNumber++}", 2),
             Text(itemNumber, "item ${itemNumber++}", 2),
@@ -85,7 +85,7 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 //        }
 
         onViewRecycled = {
-            val item = "${(it as TextViewHolder2).tvName?.text} is recycled"
+            val item = "${(it as TextViewHolder).tvName?.text} is recycled"
             Log.e("ttaylor","${item}")
             Toast.makeText(this@VarietyAdapterActivity, item,Toast.LENGTH_SHORT).show()
         }
@@ -156,12 +156,12 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                 align_vertical_to = "btnRemove"
                 onClick = {
                     val oldData = varietyAdapter.dataList.toMutableList()
-                    val first = oldData.firstOrNull() as? Text
+                    val first = oldData.get(1) as? Text
                     if (first != null) {
                         val newFirst = first.copy().apply {
                             text = "100"
                         }
-                        oldData.set(0, newFirst)
+                        oldData.set(1, newFirst)
                         varietyAdapter.dataList = oldData
                     }
                 }
@@ -192,7 +192,7 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
             rv = RecyclerView {
                 layout_width = 200
-                layout_height = 200
+                layout_height = 120
                 top_toBottomOf = "tvEmpty"
                 bottom_toBottomOf = parent_id
                 center_horizontal = true
