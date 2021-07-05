@@ -1686,8 +1686,8 @@ fun View.setShakelessClickListener(threshold: Long, onClick: (View) -> Unit) {
 /**
  * avoid memory leak for View and activity when activity has finished while coroutine is still running
  */
-fun Job.autoDispose(view: View): Job {
-    val isAttached = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
+fun Job.autoDispose(view: View?): Job {
+    view ?: return this
 
     val listener = object : View.OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(v: View?) {
@@ -1704,6 +1704,7 @@ fun Job.autoDispose(view: View): Job {
     }
     return this
 }
+
 
 /**
  * avoid memory leak

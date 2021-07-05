@@ -2,18 +2,23 @@ package taylor.com.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import taylor.com.adapterproxy.*
 import taylor.com.layout_dsl.background_color
 import taylor.com.varietyadapter.VarietyAdapter
 import test.taylor.com.taylorcode.ui.recyclerview.variety.*
+import java.util.concurrent.atomic.AtomicInteger
 
 class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope() {
-    private var itemNumber: Int = 1
+    private var itemNumber = AtomicInteger(1)
 
     private var rv: RecyclerView? = null
 
@@ -26,24 +31,40 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
         // add default content for RecyclerView
         dataList = listOf(
-            Text(itemNumber, "item ${itemNumber++}", 1),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
 //            Image("#00ff00"),
-            Text(itemNumber, "item ${itemNumber++}", 1),
-            Text(itemNumber, "item ${itemNumber++}", 1),
-            Text(itemNumber, "item ${itemNumber++}", 1),
-            Text(itemNumber, "item ${itemNumber++}", 1),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
+            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}", 2),
 //            Image("#88ff00"),
 //            Text(itemNumber, "item ${itemNumber++}", 1),
 //            Text(itemNumber, "item ${itemNumber++}", 2),
@@ -55,7 +76,7 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 //            Text(itemNumber, "item ${itemNumber++}", 1),
 //            Footer("loading")
         )
-        preloadItemCount = 2
+//        preloadItemCount = 2
         // define preload action
 //        onPreload = {
 //            // append new data to the tail of existing data
@@ -64,20 +85,55 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 //            Log.v("ttaylor", "tag=asdf, VarietyAdapterActivity.()  onPreLoad")
 //            launch(Dispatchers.IO) {
 //                val newDataList = oldList.toMutableList().apply {
-//                    val footer = removeAt(size - 1)
+////                    val footer = removeAt(size - 1)
 //                    addAll(
 //                        listOf(
-//                            Text(itemCount, "item ${itemNumber++}"),
-//                            Text(itemCount, "item ${itemNumber++}"),
-//                            Text(itemCount, "item ${itemNumber++}"),
-//                            Text(itemCount, "item ${itemNumber++}"),
-//                            Text(itemCount, "item ${itemNumber++}"),
-//                            footer
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+//                            Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+////                            footer
 //                        )
 //                    )
 //
 //                }
-//                delay(2000)
+////                delay(1000)
 //                withContext(Dispatchers.Main) {
 //                    dataList = newDataList
 //                }
@@ -85,9 +141,9 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 //        }
 
         onViewRecycled = {
-            val item = "${(it as TextViewHolder).tvName?.text} is recycled"
-            Log.e("ttaylor","${item}")
-            Toast.makeText(this@VarietyAdapterActivity, item,Toast.LENGTH_SHORT).show()
+//            val item = "${(it as TextViewHolder).tvName?.text} is recycled"
+//            Log.e("ttaylor","${item}")
+//            Toast.makeText(this@VarietyAdapterActivity, item,Toast.LENGTH_SHORT).show()
         }
 
         onViewDetachedFromWindow = {
@@ -123,6 +179,27 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                         dataList = listOf(
                             EmptyBean("No items in the list!")
                         )
+                    }
+                }
+            }
+
+            Button {
+                layout_id = "tvRemove"
+                layout_width = wrap_content
+                layout_height = wrap_content
+                textSize = 13f
+                padding = 5
+                textColor = "#3F4658"
+                gravity = gravity_center
+                text = "remove item one"
+                top_toBottomOf = "tvEmpty"
+                start_toStartOf = parent_id
+                onClick = {
+                    // demonstrate how to show empty view in VarietyAdapter
+                    varietyAdapter.apply {
+                        val oldData = dataList.toMutableList()
+                        oldData.removeFirst()
+                        dataList = oldData
                     }
                 }
             }
@@ -180,8 +257,8 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                 onClick = {
                     val oldData = varietyAdapter.dataList.toMutableList()
                     val firstText = oldData.first()
-                    val nextTexts = oldData.subList(1,oldData.size-1)
-                    val newText = Text(itemNumber,"item insert",2)
+                    val nextTexts = oldData.subList(1, oldData.size - 1)
+                    val newText = Text(itemNumber.get(), "item insert", 2)
                     val newList = mutableListOf<Any>()
                     newList.add(firstText)
                     newList.add(newText)
@@ -192,12 +269,14 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
             rv = RecyclerView {
                 layout_width = 200
-                layout_height = 120
+                layout_height = 0
                 top_toBottomOf = "tvEmpty"
                 bottom_toBottomOf = parent_id
                 center_horizontal = true
                 background_color = "#c8c8c8"
                 adapter = varietyAdapter
+                top_toBottomOf = "tvEmpty"
+                bottom_toBottomOf = parent_id
                 layoutManager = LinearLayoutManager(this@VarietyAdapterActivity)
             }
         }
@@ -206,6 +285,31 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(rootView)
+        countdown(1000_000_000_000, 1000, rv) {
+            val newList = listOf(
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+                Text(itemNumber.get(), "item ${itemNumber.getAndIncrement()}"),
+            )
+            val oldList = varietyAdapter.dataList.toMutableList()
+            oldList.addAll(newList)
+            if (oldList.size >= 200){
+                val removeCount = oldList.size - 200
+                repeat(removeCount){oldList.removeAt(0)}
+            }
+            varietyAdapter.dataList = oldList
+            rv?.smoothScrollToPosition(oldList.size - 1)
+            Log.v("ttaylor","rv size =${oldList.size}")
+            false
+        }
     }
 }
 
@@ -222,4 +326,34 @@ fun RecyclerView.addTopBottomListener(onBorder: (direction: Int) -> Unit) {
             }
         }
     })
+}
+
+
+fun countdown(
+    duration: Long,
+    interval: Long,
+    view: View?,
+    producerDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    consumerDispatcher: CoroutineDispatcher = Dispatchers.Main,
+    onCountdown: () -> Boolean
+): Job {
+    return GlobalScope.launch(consumerDispatcher) {
+        var d = duration
+        val flow = flow {
+            while (isActive) {
+                if (d <= 0) cancel()
+                emit(Unit)
+                delay(interval)
+                d -= interval
+            }
+        }.flowOn(producerDispatcher)
+
+        try {
+            flow.collect {
+                if (onCountdown()) cancel()
+            }
+        } catch (t: Throwable) {
+            t.printStackTrace()
+        }
+    }.autoDispose(view)
 }

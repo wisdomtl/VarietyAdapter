@@ -14,12 +14,12 @@ class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
         val itemView = parent.context.run {
             ConstraintLayout {
                 layout_width = match_parent
-                layout_height = 60
+                layout_height = 70
 
                 TextView {
                     layout_id = "tvName"
                     layout_width = wrap_content
-                    layout_height = 60
+                    layout_height = wrap_content
                     textSize = 30f
                     gravity = gravity_center
                     textColor = "#ff00ff"

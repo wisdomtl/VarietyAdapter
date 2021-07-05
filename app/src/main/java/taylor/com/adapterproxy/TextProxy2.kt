@@ -12,11 +12,13 @@ class TextProxy2 : VarietyAdapter.Proxy<Text, TextViewHolder2>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
             ConstraintLayout {
+                layout_width = match_parent
+                layout_height = 70
                 TextView {
                     layout_id = "tvName"
                     layout_width = match_parent
-                    layout_height = 60
-                    textSize = 20f
+                    layout_height = wrap_content
+                    textSize = 15f
                     gravity = gravity_center
                     center_horizontal  = true
                     textColor = "#887654"
