@@ -69,6 +69,11 @@ class VarietyAdapter(
     var preloadItemCount = 0
 
     /**
+     * to avoid preload action when there is not enough item to fill the screen
+     */
+    var minPrelaodItemCount = 0
+
+    /**
      * an lambda will be invoked in [onBindViewHolder] when preload threshold is satisfied
      * implement this lambda with actual data loading action
      */
@@ -167,6 +172,7 @@ class VarietyAdapter(
     private fun checkPreload(position: Int) {
         if (onPreload != null
             && position == max(itemCount - 1 - preloadItemCount, 0)// reach the preload threshold position
+            && itemCount > minPrelaodItemCount // to avoid preload when there is not enough items to fill the screen
             && scrollState != SCROLL_STATE_IDLE // the list is scrolling
         ) {
             onPreload?.invoke()
