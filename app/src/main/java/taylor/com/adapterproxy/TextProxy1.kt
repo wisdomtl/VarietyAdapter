@@ -82,7 +82,6 @@ data class Text(
         }
     }
 
-    override fun hashCode(): Int = id
     override fun diff(other: Any?): Any? {
         return when {
             other !is Text -> null
@@ -92,6 +91,22 @@ data class Text(
             else -> {
                 null
             }
+        }
+    }
+
+    override fun sameAs(other: Any?): Boolean {
+        return when {
+            other !is Text -> false
+            this.id != other.id -> false
+            else -> true
+        }
+    }
+
+    override fun contentSameAs(other: Any?): Boolean {
+        return when {
+            other !is Text -> false
+            this.text != other.text -> false
+            else -> true
         }
     }
 
