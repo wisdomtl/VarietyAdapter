@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import taylor.com.varietyadapter.VarietyAdapter.Proxy
 import java.lang.reflect.ParameterizedType
 import kotlin.math.max
 
@@ -41,7 +40,7 @@ import kotlin.math.max
  * recyclerView.adapter = varietyAdapter
  * recyclerView.layoutManager = LinearLayoutManager(context)
  */
-class VarietyAdapter(
+open class VarietyAdapter2(
     /**
      * the list of [Proxy]
      */
@@ -110,26 +109,31 @@ class VarietyAdapter(
     var onViewDetachedFromWindow: ((holder: ViewHolder) -> Unit)? = null
     var onViewRecycled: ((holder: ViewHolder) -> Unit)? = null
 
+    open fun getIndex(position: Int):Int = position
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return proxyList[viewType].onCreateViewHolder(parent, viewType)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[position], position, action)
+        val index = getIndex(position)
+        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[index], position, action)
         checkPreload(position)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[position], position, action, payloads)
+        val index = getIndex(position)
+        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[index], position, action, payloads)
         checkPreload(position)
     }
 
     override fun getItemCount(): Int = dataList.size
 
     override fun getItemViewType(position: Int): Int {
-        return getProxyIndex(dataList[position])
+        val index = getIndex(position)
+        return getProxyIndex(dataList[index])
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {

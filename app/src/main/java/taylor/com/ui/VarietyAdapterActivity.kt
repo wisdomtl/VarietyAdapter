@@ -27,20 +27,33 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
 
         // add default content for RecyclerView
         dataList = listOf(
-            Text(itemNumber, "item ${itemNumber++}", 1),
-            Image("#00ff00"),
             Text(itemNumber, "item ${itemNumber++}", 2),
-            Text(itemNumber, "item ${itemNumber++}", 1),
-            Image("#88ff00"),
-            Text(itemNumber, "item ${itemNumber++}", 1),
+//            Image("#00ff00"),
             Text(itemNumber, "item ${itemNumber++}", 2),
             Text(itemNumber, "item ${itemNumber++}", 2),
-            Image("#ffff00"),
-            Text(itemNumber, "item ${itemNumber++}", 1),
+//            Image("#88ff00"),
             Text(itemNumber, "item ${itemNumber++}", 2),
-            Image("#098f00"),
-            Text(itemNumber, "item ${itemNumber++}", 1),
-            Footer("loading")
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+//            Image("#ffff00"),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+//            Image("#098f00"),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+            Text(itemNumber, "item ${itemNumber++}", 2),
+//            Footer("loading")
         )
         preloadItemCount = 2
         // define preload action
