@@ -40,7 +40,7 @@ import kotlin.math.max
  * recyclerView.adapter = varietyAdapter
  * recyclerView.layoutManager = LinearLayoutManager(context)
  */
-open class VarietyAdapter2(
+open class VarietyAdapter(
     /**
      * the list of [Proxy]
      */
