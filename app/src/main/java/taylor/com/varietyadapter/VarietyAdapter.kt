@@ -42,9 +42,9 @@ import kotlin.math.max
  */
 open class VarietyAdapter(
     /**
-     * the list of [Proxy]
+     * the list of [ItemBuilder]
      */
-    private var proxyList: MutableList<Proxy<*, *>> = mutableListOf(),
+    private var itemBuilderLists: MutableList<ItemBuilder<*, *>> = mutableListOf(),
     /**
      * the dispatcher used by [dataDiffer]
      */
@@ -86,15 +86,15 @@ open class VarietyAdapter(
     /**
      * add a new type of item for RecyclerView
      */
-    fun <T, VH : ViewHolder> addProxy(proxy: Proxy<T, VH>) {
-        proxyList.add(proxy)
+    fun <T, VH : ViewHolder> addProxy(itemBuilder: ItemBuilder<T, VH>) {
+        itemBuilderLists.add(itemBuilder)
     }
 
     /**
      * remove a type of item for RecyclerView
      */
-    fun <T, VH : ViewHolder> removeProxy(proxy: Proxy<T, VH>) {
-        proxyList.remove(proxy)
+    fun <T, VH : ViewHolder> removeProxy(itemBuilder: ItemBuilder<T, VH>) {
+        itemBuilderLists.remove(itemBuilder)
     }
 
     /**
@@ -112,20 +112,20 @@ open class VarietyAdapter(
     open fun getIndex(position: Int):Int = position
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return proxyList[viewType].onCreateViewHolder(parent, viewType)
+        return itemBuilderLists[viewType].onCreateViewHolder(parent, viewType)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val index = getIndex(position)
-        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[index], position, action)
+        (itemBuilderLists[getItemViewType(position)] as ItemBuilder<Any, ViewHolder>).onBindViewHolder(holder, dataList[index], position, action)
         checkPreload(position)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         val index = getIndex(position)
-        (proxyList[getItemViewType(position)] as Proxy<Any, ViewHolder>).onBindViewHolder(holder, dataList[index], position, action, payloads)
+        (itemBuilderLists[getItemViewType(position)] as ItemBuilder<Any, ViewHolder>).onBindViewHolder(holder, dataList[index], position, action, payloads)
         checkPreload(position)
     }
 
@@ -133,7 +133,7 @@ open class VarietyAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val index = getIndex(position)
-        return getProxyIndex(dataList[index])
+        return getItemBuilderIndex(dataList[index])
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -184,20 +184,20 @@ open class VarietyAdapter(
     }
 
     /**
-     * find the index of [Proxy] according to the [data] in the [proxyList]
+     * find the index of [ItemBuilder] according to the [data] in the [itemBuilderLists]
      */
-    private fun getProxyIndex(data: Any): Int = proxyList.indexOfFirst {
+    private fun getItemBuilderIndex(data: Any): Int = itemBuilderLists.indexOfFirst {
         val firstTypeParamClassName = (it.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0].toString()
         val proxyClassName = it.javaClass.toString()
         firstTypeParamClassName == data.javaClass.toString() // primary condition:if the first type parameter of AdapterProxy is the same as the data, it means the accordingly AdapterProxy found
-                && (data as? DataProxyMap)?.toProxy() ?: proxyClassName == proxyClassName // secondary condition: match data to proxy mapping relation defined by the data
+                && (data as? DataItemBuilderMapper)?.toProxy() ?: proxyClassName == proxyClassName // secondary condition: match data to proxy mapping relation defined by the data
     }
 
     /**
      * the proxy of [RecyclerView.Adapter], which has the similar function to it.
-     * the business layer implements [Proxy] to define how does the item look like
+     * the business layer implements [ItemBuilder] to define how does the item look like
      */
-    abstract class Proxy<T, VH : ViewHolder> {
+    abstract class ItemBuilder<T, VH : ViewHolder> {
 
         abstract fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
 
@@ -211,7 +211,7 @@ open class VarietyAdapter(
     /**
      * If one type of data maps multiple proxy, data class should implements this interface to define the mapping relation
      */
-    interface DataProxyMap {
+    interface DataItemBuilderMapper {
         /**
          * @return the class name of proxy mapped
          */

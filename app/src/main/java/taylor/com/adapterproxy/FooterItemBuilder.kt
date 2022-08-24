@@ -1,11 +1,9 @@
 package taylor.com.adapterproxy
 
 import android.animation.ValueAnimator
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import taylor.com.animation_dsl.animSet
@@ -13,7 +11,7 @@ import taylor.com.ui.*
 import taylor.com.varietyadapter.R
 import taylor.com.varietyadapter.VarietyAdapter
 
-class FooterProxy : VarietyAdapter.Proxy<Footer, FooterViewHolder>() {
+class FooterItemBuilder : VarietyAdapter.ItemBuilder<Footer, FooterViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
             ConstraintLayout {

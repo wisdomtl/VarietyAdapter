@@ -8,9 +8,9 @@ import taylor.com.ui.*
 import taylor.com.varietyadapter.VarietyAdapter
 
 /**
- * a [VarietyAdapter.Proxy] which will be used when [RecyclerView] is empty
+ * a [VarietyAdapter.ItemBuilder] which will be used when [RecyclerView] is empty
  */
-class EmptyProxy:VarietyAdapter.Proxy<EmptyBean,EmptyViewHolder>() {
+class EmptyItemBuilder:VarietyAdapter.ItemBuilder<EmptyBean,EmptyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
             TextView {

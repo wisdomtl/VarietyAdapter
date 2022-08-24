@@ -9,8 +9,8 @@ import kotlinx.coroutines.*
 import taylor.com.adapterproxy.*
 import taylor.com.varietyadapter.VarietyAdapter
 import test.taylor.com.taylorcode.ui.recyclerview.variety.Text
-import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy1
-import test.taylor.com.taylorcode.ui.recyclerview.variety.TextProxy2
+import test.taylor.com.taylorcode.ui.recyclerview.variety.TextItemBuilder1
+import test.taylor.com.taylorcode.ui.recyclerview.variety.TextItemBuilder2
 import test.taylor.com.taylorcode.ui.recyclerview.variety.TextViewHolder
 
 class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope() {
@@ -19,11 +19,11 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
     private var rv: RecyclerView? = null
 
     private val varietyAdapter = VarietyAdapter().apply {
-        addProxy(TextProxy1())
-        addProxy(TextProxy2())
-        addProxy(ImageProxy())
-        addProxy(EmptyProxy())
-        addProxy(FooterProxy())
+        addProxy(TextItemBuilder1())
+        addProxy(TextItemBuilder2())
+        addProxy(ImageItemBuilder())
+        addProxy(EmptyItemBuilder())
+        addProxy(FooterItemBuilder())
 
         // add default content for RecyclerView
         dataList = listOf(
