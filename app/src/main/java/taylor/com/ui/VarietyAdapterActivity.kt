@@ -3,10 +3,17 @@ package taylor.com.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import taylor.com.adapterproxy.*
+import taylor.com.paging3.PagingAdapter
+import taylor.com.paging3.PagingViewModel
+import taylor.com.paging3.TextRepository
 import taylor.com.varietyadapter.VarietyAdapter
 import test.taylor.com.taylorcode.ui.recyclerview.variety.Text
 import test.taylor.com.taylorcode.ui.recyclerview.variety.TextItemBuilder1
@@ -17,6 +24,14 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
     private var itemNumber: Int = 1
 
     private var rv: RecyclerView? = null
+
+    private val pagingViewModel by lazy { ViewModelProvider(this,object :ViewModelProvider.Factory{
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return PagingViewModel(TextRepository()) as T
+        }
+    })[PagingViewModel::class.java] }
+
+    private val pagingAdapter by lazy { PagingAdapter() }
 
     private val varietyAdapter = VarietyAdapter().apply {
         addProxy(TextItemBuilder1())
@@ -167,7 +182,8 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
                 top_toBottomOf = "tvEmpty"
                 bottom_toBottomOf = parent_id
                 center_horizontal = true
-                adapter = varietyAdapter
+//                adapter = varietyAdapter
+                adapter = pagingAdapter
                 layoutManager = LinearLayoutManager(this@VarietyAdapterActivity)
             }
         }
@@ -176,6 +192,12 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(rootView)
+
+        lifecycleScope.launch {
+            pagingViewModel.pagingData.collect {
+                pagingAdapter.submitData(it)
+            }
+        }
     }
 }
 
