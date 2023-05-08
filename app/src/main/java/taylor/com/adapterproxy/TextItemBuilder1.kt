@@ -9,7 +9,7 @@ import taylor.com.ui.*
 import taylor.com.varietyadapter.Diff
 import taylor.com.varietyadapter.VarietyAdapter
 
-class TextProxy1 : VarietyAdapter.Proxy<Text, TextViewHolder>() {
+class TextItemBuilder1 : VarietyAdapter.ItemBuilder<Text, TextViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = parent.context.run {
             ConstraintLayout {
@@ -76,9 +76,9 @@ data class Text(
 ) : VarietyAdapter.DataProxyMap, Diff {
     override fun toProxy(): String {
         return when (type) {
-            1 -> TextProxy1::class.java.toString()
-            2 -> TextProxy2::class.java.toString()
-            else -> TextProxy2::class.java.toString()
+            1 -> TextItemBuilder1::class.java.toString()
+            2 -> TextItemBuilder2::class.java.toString()
+            else -> TextItemBuilder2::class.java.toString()
         }
     }
 

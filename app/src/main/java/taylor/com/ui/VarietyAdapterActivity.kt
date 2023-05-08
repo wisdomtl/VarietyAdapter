@@ -19,11 +19,11 @@ class VarietyAdapterActivity : AppCompatActivity(), CoroutineScope by MainScope(
     private var rv: RecyclerView? = null
 
     private val varietyAdapter = VarietyAdapter().apply {
-        addProxy(TextItemBuilder1())
-        addProxy(TextItemBuilder2())
-        addProxy(ImageItemBuilder())
-        addProxy(EmptyItemBuilder())
-        addProxy(FooterItemBuilder())
+        addItemBuilder(TextItemBuilder1())
+        addItemBuilder(TextItemBuilder2())
+        addItemBuilder(ImageItemBuilder())
+        addItemBuilder(EmptyItemBuilder())
+        addItemBuilder(FooterItemBuilder())
 
         // add default content for RecyclerView
         dataList = listOf(
